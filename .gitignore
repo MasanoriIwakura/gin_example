@@ -1,0 +1,8 @@
+# app
+/**/tmp
+
+# db
+docker/db/data/
+
+# redis
+docker/redis/data/

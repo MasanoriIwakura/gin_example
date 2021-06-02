@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  nginx:
+    build:
+      context: docker/nginx
+    ports:
+      - 8100:80
+    depends_on:
+      - app
+    environment:
+      HOST: app
+      PORT: 8080
+
+  app:
+    build:
+      context: .
+    environment:
+      TZ: Asia/Tokyo
+    volumes:
+      - ./app/:/app
+    ports:
+      - 2345:2345
+    stdin_open: true
+    tty: true
+    security_opt:
+      - apparmor:unconfined
+    cap_add:
+      - SYS_PTRACE
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: mysql:5.7
+    volumes:
+      - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./docker/db/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      TZ: Asia/Tokyo
+
+  redis:
+    image: redis:6.2.3
+    environment:
+      TZ: Asia/Tokyo
+    volumes:
+      - ./docker/redis/data/redis:/data
