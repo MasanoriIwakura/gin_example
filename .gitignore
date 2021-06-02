@@ -1,5 +1,6 @@
 # app
 /**/tmp
+.env
 
 # db
 docker/db/data/
